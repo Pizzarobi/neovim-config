@@ -24,7 +24,11 @@ $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";
 
 Write-Host "==> Copying config..."
 New-Item -ItemType Directory -Force -Path $nvimConfig | Out-Null
-Copy-Item "$scriptDir\init.lua" "$nvimConfig\init.lua" -Force
+if ((Resolve-Path "$scriptDir\init.lua").Path -ne (Resolve-Path "$nvimConfig\init.lua" -ErrorAction SilentlyContinue).Path) {
+  Copy-Item "$scriptDir\init.lua" "$nvimConfig\init.lua" -Force
+} else {
+  Write-Host "  -> Config already in place, skipping copy."
+}
 
 Write-Host "==> Bootstrapping plugins (this may take a minute)..."
 nvim --headless "+Lazy! sync" +qa
