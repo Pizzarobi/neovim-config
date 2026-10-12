@@ -56,15 +56,21 @@ require("lazy").setup({
   -- Syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
     build = ":TSUpdate",
     config = function()
-      if vim.fn.has("win32") == 1 then
-        require("nvim-treesitter.install").compilers = { "zig" }
+      -- main branch: no ensure_installed/highlight options; install + start explicitly
+      local langs = { "lua", "bash", "javascript", "html", "css", "yaml", "json", "dockerfile" }
+      if vim.fn.executable("tree-sitter") == 1 then
+        require("nvim-treesitter").install(langs)
       end
-      require("nvim-treesitter.config").setup({
-        ensure_installed = { "lua", "bash", "javascript", "html", "css", "yaml", "json", "dockerfile" },
-        highlight = { enable = true },
-        indent = { enable = true },
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+          if pcall(vim.treesitter.start, args.buf) then
+            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
       })
     end,
   },
