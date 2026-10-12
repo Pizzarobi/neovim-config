@@ -40,9 +40,13 @@ The setup scripts install all dependencies, copy the config, and sync plugins au
 
 ## External Dependencies
 
+Requires **Neovim 0.12+** (nvim-treesitter `main` branch). Ubuntu's apt package is too old — use the official release.
+
+
 | Tool | Purpose | Linux | Windows |
 |---|---|---|---|
 | `ripgrep` | Telescope live grep | installed by setup.sh | installed by setup.ps1 |
+| `tree-sitter` CLI ≥ 0.26.1 | Build Treesitter parsers | downloaded to `~/.local/bin` by setup.sh | install manually |
 | `gcc` / `zig` | Compile Treesitter parsers | gcc via apt/pacman/dnf | zig via winget |
 | `git` | Plugin manager needs it | usually pre-installed | installed by setup.ps1 |
 
